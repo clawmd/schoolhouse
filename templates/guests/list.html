@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Guests{% endblock %}
+{% block nav_guests %}active{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h5 class="mb-0">Guests</h5>
+  <a href="{% url 'guests:new' %}" class="btn btn-primary btn-sm"><i class="bi bi-plus"></i> New Guest</a>
+</div>
+
+<form class="row g-2 mb-3" method="get">
+  <div class="col-auto">
+    <input type="text" name="q" value="{{ q }}" class="form-control form-control-sm" placeholder="Search name, email, city…" style="width:280px">
+  </div>
+  <div class="col-auto">
+    <button class="btn btn-sm btn-outline-secondary" type="submit">Search</button>
+    {% if q %}<a href="{% url 'guests:list' %}" class="btn btn-sm btn-link">Clear</a>{% endif %}
+  </div>
+</form>
+
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-hover table-sm mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Name</th>
+          <th>City, State</th>
+          <th>Phone</th>
+          <th>Email</th>
+          <th>Desirability</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for guest in guests %}
+        <tr>
+          <td><a href="{% url 'guests:detail' guest.pk %}">{{ guest.last_name }}, {{ guest.first_name }}</a></td>
+          <td>{{ guest.city }}{% if guest.city and guest.state %}, {% endif %}{{ guest.state }}</td>
+          <td>{{ guest.phone_cell|default:guest.phone_home }}</td>
+          <td>{{ guest.email }}</td>
+          <td>
+            {% if guest.desirability %}
+            <span class="badge bg-{{ guest.desirability_color }}">{{ guest.get_desirability_display }}</span>
+            {% endif %}
+          </td>
+          <td class="text-end">
+            <a href="{% url 'guests:edit' guest.pk %}" class="btn btn-sm btn-outline-secondary py-0">Edit</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" class="text-muted text-center py-3">No guests found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

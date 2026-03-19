@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block nav_rates %}active{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+  <a href="{% url 'reservations:rate_list' %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back to Rates</a>
+</div>
+<h5 class="mb-3">{{ title }}</h5>
+<form method="post" id="rate-form">
+  {% csrf_token %}
+  <div class="card shadow-sm" style="max-width:700px">
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label small">Season</label>
+          {{ form.season }}
+        </div>
+        <div class="col-md-4">
+          <label class="form-label small">Date Start</label>
+          {{ form.date_start }}
+        </div>
+        <div class="col-md-4">
+          <label class="form-label small">Date End</label>
+          {{ form.date_end }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small">Weekly Rate</label>
+          {{ form.rate_weekly }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small">Daily Rate</label>
+          {{ form.rate_daily }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small">Weekly Rate (CC)</label>
+          {{ form.rate_weekly_cc }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small">Daily Rate (CC)</label>
+          {{ form.rate_daily_cc }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small">Deposit</label>
+          {{ form.deposit }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small">Cleaning</label>
+          {{ form.cleaning }}
+        </div>
+      </div>
+    </div>
+    <div class="card-footer bg-transparent d-flex gap-2">
+      <button type="submit" class="btn btn-primary">Save</button>
+      <a href="{% url 'reservations:rate_list' %}" class="btn btn-outline-secondary">Cancel</a>
+    </div>
+  </div>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('#rate-form input, #rate-form select').forEach(el => {
+  if (el.tagName === 'SELECT') el.classList.add('form-select', 'form-select-sm');
+  else el.classList.add('form-control', 'form-control-sm');
+});
+</script>
+{% endblock %}

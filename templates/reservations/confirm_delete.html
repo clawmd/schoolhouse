@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Delete Reservation{% endblock %}
+{% block nav_reservations %}active{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+  <a href="{% url 'reservations:detail' res.pk %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back</a>
+</div>
+<div class="card shadow-sm" style="max-width:480px">
+  <div class="card-body">
+    <h5 class="card-title">Delete Reservation</h5>
+    <p>Delete reservation for <strong>{{ res.guest }}</strong> ({{ res.arrive_date|date:"M d, Y" }} – {{ res.leave_date|date:"M d, Y" }})?</p>
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Yes, Delete</button>
+      <a href="{% url 'reservations:detail' res.pk %}" class="btn btn-outline-secondary ms-2">Cancel</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

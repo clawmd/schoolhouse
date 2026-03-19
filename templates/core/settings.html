@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% block title %}App Settings{% endblock %}
+{% block nav_settings %}active{% endblock %}
+
+{% block content %}
+<h5 class="mb-3">App Settings</h5>
+
+<form method="post" id="settings-form">
+  {% csrf_token %}
+  <div class="card shadow-sm mb-3">
+    <div class="card-header py-2"><strong class="small text-muted text-uppercase" style="letter-spacing:.05em">Owner Information</strong></div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-3">
+          <label class="form-label small">First Name</label>
+          {{ form.owner_first_name }}
+        </div>
+        <div class="col-md-1">
+          <label class="form-label small">MI</label>
+          {{ form.owner_middle_initial }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small">Last Name</label>
+          {{ form.owner_last_name }}
+        </div>
+        <div class="col-md-4">
+          <label class="form-label small">Email</label>
+          {{ form.owner_email }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small">Phone</label>
+          {{ form.owner_phone }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small">Google Phone</label>
+          {{ form.google_phone }}
+        </div>
+        <div class="col-md-5">
+          <label class="form-label small">Address 1</label>
+          {{ form.owner_address1 }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small">City</label>
+          {{ form.owner_city }}
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small">State</label>
+          {{ form.owner_state }}
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small">Zip</label>
+          {{ form.owner_zip }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm mb-3">
+    <div class="card-header py-2"><strong class="small text-muted text-uppercase" style="letter-spacing:.05em">Financial</strong></div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-2">
+          <label class="form-label small">Tax Rate (decimal)</label>
+          {{ form.tax_rate }}
+          <div class="form-text">e.g. 0.15 = 15%</div>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small">Mileage Rate ($/mi)</label>
+          {{ form.mileage_rate }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small">EIN</label>
+          {{ form.ein }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small">State Tax Reg #</label>
+          {{ form.state_tax_reg_number }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small">State Occupancy Tax #</label>
+          {{ form.state_occupancy_tax_number }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small">PayPal</label>
+          {{ form.paypal }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small">Amazon Prime</label>
+          {{ form.amazon_prime }}
+        </div>
+        <div class="col-md-4">
+          <label class="form-label small">Agent Email</label>
+          {{ form.email_agent }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm mb-3">
+    <div class="card-header py-2"><strong class="small text-muted text-uppercase" style="letter-spacing:.05em">Email Templates</strong></div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label small">Salutation</label>
+          {{ form.salutation }}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label small">Closing</label>
+          {{ form.closing }}
+        </div>
+        <div class="col-12">
+          <label class="form-label small">Confirmation Email Body</label>
+          {{ form.email_confirmation_body }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm mb-3">
+    <div class="card-header py-2"><strong class="small text-muted text-uppercase" style="letter-spacing:.05em">Lookup Lists</strong></div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label small">Service Types <span class="text-muted">(one per line)</span></label>
+          {{ form.service_types }}
+        </div>
+        <div class="col-md-4">
+          <label class="form-label small">Maintenance Types <span class="text-muted">(one per line)</span></label>
+          {{ form.maintenance_types }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex gap-2">
+    <button type="submit" class="btn btn-primary">Save Settings</button>
+  </div>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('#settings-form input, #settings-form select, #settings-form textarea').forEach(el => {
+  if (el.tagName === 'SELECT') el.classList.add('form-select', 'form-select-sm');
+  else if (el.tagName === 'TEXTAREA') { el.classList.add('form-control', 'form-control-sm'); if (!el.rows) el.rows = 3; }
+  else el.classList.add('form-control', 'form-control-sm');
+});
+</script>
+{% endblock %}

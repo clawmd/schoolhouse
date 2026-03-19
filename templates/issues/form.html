@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block nav_issues %}active{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+  <a href="{% url 'issues:list' %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back</a>
+</div>
+<h5 class="mb-3">{{ title }}</h5>
+
+<form method="post" id="issue-form">
+  {% csrf_token %}
+  <div class="card shadow-sm" style="max-width:600px">
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-12">
+          <label class="form-label small">Title *</label>
+          {{ form.title }}
+        </div>
+        <div class="col-md-4">
+          <label class="form-label small">Priority</label>
+          {{ form.priority }}
+        </div>
+        <div class="col-md-4 d-flex align-items-end pb-1">
+          <div class="form-check">
+            {{ form.needs_attention }}
+            <label class="form-check-label small ms-1">Needs Attention</label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label small">Completion Date</label>
+          {{ form.completion_date }}
+        </div>
+        <div class="col-12">
+          <label class="form-label small">Notes</label>
+          {{ form.note }}
+        </div>
+      </div>
+    </div>
+    <div class="card-footer bg-transparent d-flex gap-2">
+      <button type="submit" class="btn btn-primary">Save Issue</button>
+      <a href="{% url 'issues:list' %}" class="btn btn-outline-secondary">Cancel</a>
+    </div>
+  </div>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('#issue-form input:not([type=checkbox]), #issue-form select, #issue-form textarea').forEach(el => {
+  if (el.tagName === 'SELECT') el.classList.add('form-select', 'form-select-sm');
+  else if (el.tagName === 'TEXTAREA') { el.classList.add('form-control', 'form-control-sm'); el.rows = 4; }
+  else el.classList.add('form-control', 'form-control-sm');
+});
+</script>
+{% endblock %}

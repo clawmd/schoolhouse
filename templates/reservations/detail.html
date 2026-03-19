@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% block title %}Reservation — {{ res.guest }}{% endblock %}
+{% block nav_reservations %}active{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+  <a href="{% url 'reservations:list' %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back to Reservations</a>
+</div>
+
+<div class="d-flex justify-content-between align-items-start mb-3">
+  <div>
+    <h4 class="mb-0 fw-semibold">Reservation — {{ res.guest.full_name }}
+      <span class="badge bg-{{ res.status_color }} ms-2" style="font-size:.8rem">{{ res.status|upper }}</span>
+      {% if res.has_overlap %}<span class="badge bg-warning text-dark ms-1" style="font-size:.8rem">OVERLAP</span>{% endif %}
+    </h4>
+    <small class="text-muted">{{ res.arrive_date|date:"M d, Y" }} — {{ res.leave_date|date:"M d, Y" }} ({{ res.number_of_nights }} night{{ res.number_of_nights|pluralize }})</small>
+  </div>
+  <div>
+    <a href="{% url 'reservations:edit' res.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+    {% if user.is_staff %}
+    <a href="{% url 'reservations:delete' res.pk %}" class="btn btn-sm btn-outline-danger ms-1">Delete</a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="row g-3">
+  <!-- Guest & Dates -->
+  <div class="col-md-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h6 class="card-subtitle mb-3 text-muted text-uppercase" style="font-size:.72rem;letter-spacing:.05em">Guest & Dates</h6>
+        <table class="table table-sm mb-0" style="font-size:.875rem">
+          <tr>
+            <td class="text-muted" width="140">Guest</td>
+            <td><a href="{% url 'guests:detail' res.guest.pk %}">{{ res.guest.full_name }}</a>
+              {% if res.pin %}&nbsp;<span class="text-muted small">PIN: {{ res.pin }}</span>{% endif %}
+            </td>
+          </tr>
+          <tr><td class="text-muted">Arrive</td><td>{{ res.arrive_date|date:"M d, Y" }}{% if res.arrive_time %} at {{ res.arrive_time|time:"g:i A" }}{% endif %}</td></tr>
+          <tr><td class="text-muted">Leave</td><td>{{ res.leave_date|date:"M d, Y" }}{% if res.leave_time %} at {{ res.leave_time|time:"g:i A" }}{% endif %}</td></tr>
+          <tr><td class="text-muted">Adults</td><td>{{ res.adults_count }}</td></tr>
+          <tr><td class="text-muted">Children</td><td>{{ res.children_count }}</td></tr>
+          <tr><td class="text-muted">Pets</td><td>{% if res.pets %}Yes{% else %}No{% endif %}</td></tr>
+          {% if res.source %}<tr><td class="text-muted">Source</td><td>{{ res.source }}</td></tr>{% endif %}
+          {% if res.season %}<tr><td class="text-muted">Season</td><td>{{ res.season }}</td></tr>{% endif %}
+          {% if res.notes %}
+          <tr><td class="text-muted">Notes</td><td style="white-space:pre-line">{{ res.notes }}</td></tr>
+          {% endif %}
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fees & Payments -->
+  <div class="col-md-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h6 class="card-subtitle mb-3 text-muted text-uppercase" style="font-size:.72rem;letter-spacing:.05em">Fees & Payments</h6>
+        <div class="row">
+          <div class="col-6">
+            <table class="table table-sm mb-0" style="font-size:.875rem">
+              <tr><td class="text-muted">Rental</td><td class="text-end">${{ res.rental_fee|default:"—"|floatformat:2 }}</td></tr>
+              <tr><td class="text-muted">Cleaning</td><td class="text-end">${{ res.cleaning_fee|default:"—"|floatformat:2 }}</td></tr>
+              {% if res.additional_fee %}
+              <tr><td class="text-muted">Additional{% if res.additional_fee_note %} <small>({{ res.additional_fee_note }})</small>{% endif %}</td><td class="text-end">${{ res.additional_fee|floatformat:2 }}</td></tr>
+              {% endif %}
+              {% if res.tax_fee %}
+              <tr><td class="text-muted">Tax</td><td class="text-end">${{ res.tax_fee|floatformat:2 }}</td></tr>
+              {% endif %}
+              <tr class="fw-semibold"><td>Total</td><td class="text-end">${{ res.total_fee|floatformat:2 }}</td></tr>
+              <tr><td class="text-muted">Deposit</td><td class="text-end">${{ res.deposit|default:"—"|floatformat:2 }}</td></tr>
+              <tr class="{% if res.balance > 0 %}text-danger{% endif %} fw-semibold">
+                <td>Balance</td><td class="text-end">${{ res.balance|floatformat:2 }}</td>
+              </tr>
+            </table>
+          </div>
+          <div class="col-6" style="font-size:.875rem">
+            {% if res.payment_type %}<p class="mb-1"><span class="text-muted">Pay type:</span> {{ res.payment_type }}</p>{% endif %}
+            {% if res.payment_contract_how_many %}<p class="mb-1"><span class="text-muted">Contract:</span> {{ res.get_payment_contract_how_many_display }}</p>{% endif %}
+            <p class="mb-1"><span class="text-muted">Pmt 1 due:</span> {{ res.pay_1_due|date:"M d" }}
+              {% if res.pay_1_overdue %}<span class="badge bg-danger ms-1">Overdue</span>{% endif %}
+            </p>
+            {% if res.payment_1_actual %}<p class="mb-1"><span class="text-muted">Pmt 1 rec'd:</span> ${{ res.payment_1_actual|floatformat:2 }}{% if res.payment_1_date %} on {{ res.payment_1_date|date:"M d" }}{% endif %}</p>{% endif %}
+            <p class="mb-1"><span class="text-muted">Pmt 2 due:</span> {{ res.pay_2_due|date:"M d" }}
+              {% if res.pay_2_overdue %}<span class="badge bg-danger ms-1">Overdue</span>{% endif %}
+            </p>
+            {% if res.payment_2_actual %}<p class="mb-1"><span class="text-muted">Pmt 2 rec'd:</span> ${{ res.payment_2_actual|floatformat:2 }}{% if res.payment_2_date %} on {{ res.payment_2_date|date:"M d" }}{% endif %}</p>{% endif %}
+            {% if res.payment_deposit_received %}<p class="mb-1"><span class="text-muted">Deposit rec'd:</span> ${{ res.payment_deposit_received|floatformat:2 }}</p>{% endif %}
+            {% if res.deposit_returned %}<p class="mb-0"><span class="badge bg-secondary">Deposit returned{% if res.deposit_amount_returned %}: ${{ res.deposit_amount_returned|floatformat:2 }}{% endif %}</span></p>{% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status Tracking -->
+  <div class="col-md-6">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h6 class="card-subtitle mb-2 text-muted text-uppercase" style="font-size:.72rem;letter-spacing:.05em">Status Tracking</h6>
+        <div style="font-size:.875rem">
+          <span class="me-3">{% if res.confirm_sent %}<i class="bi bi-check-circle-fill text-success"></i>{% else %}<i class="bi bi-circle text-muted"></i>{% endif %} Confirmation Sent</span>
+          <span class="me-3">{% if res.precheck_email_sent %}<i class="bi bi-check-circle-fill text-success"></i>{% else %}<i class="bi bi-circle text-muted"></i>{% endif %} Pre-check Email</span><br class="d-md-none">
+          <span class="me-3 mt-1 d-inline-block">{% if res.contract_rules_sent %}<i class="bi bi-check-circle-fill text-success"></i>{% else %}<i class="bi bi-circle text-muted"></i>{% endif %} Contract Sent
+            {% if res.contract_rules_status %}<span class="badge bg-secondary ms-1">{{ res.contract_rules_status }}</span>{% endif %}
+          </span>
+          {% if res.pets %}
+          <span class="mt-1 d-inline-block">{% if res.contract_pet_sent %}<i class="bi bi-check-circle-fill text-success"></i>{% else %}<i class="bi bi-circle text-muted"></i>{% endif %} Pet Rules Sent
+            {% if res.contract_pet_status %}<span class="badge bg-secondary ms-1">{{ res.contract_pet_status }}</span>{% endif %}
+          </span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Documents -->
+  <div class="col-md-6">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h6 class="card-subtitle mb-2 text-muted text-uppercase" style="font-size:.72rem;letter-spacing:.05em">Documents</h6>
+        <div class="d-flex flex-wrap gap-2">
+          <a href="{% url 'documents:contract_print' res.pk %}" target="_blank" class="btn btn-sm btn-outline-secondary">Print Contract</a>
+          <a href="{% url 'documents:contract_print_ha' res.pk %}" target="_blank" class="btn btn-sm btn-outline-secondary">Print Contract (HA)</a>
+          <a href="{% url 'documents:rules_print' res.pk %}" target="_blank" class="btn btn-sm btn-outline-secondary">House Rules</a>
+          {% if res.pets %}
+          <a href="{% url 'documents:pet_rules_print' res.pk %}" target="_blank" class="btn btn-sm btn-outline-secondary">Pet Rules</a>
+          {% endif %}
+          <a href="{% url 'documents:email_generator' res.pk %}" class="btn btn-sm btn-outline-primary">Generate Email</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Prior Stays -->
+  {% if prior_stays %}
+  <div class="col-12">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h6 class="card-subtitle mb-2 text-muted text-uppercase" style="font-size:.72rem;letter-spacing:.05em">Prior Stays ({{ res.guest.full_name }})</h6>
+        <div class="d-flex flex-wrap gap-3" style="font-size:.875rem">
+          {% for stay in prior_stays %}
+          <a href="{% url 'reservations:detail' stay.pk %}" class="text-decoration-none">
+            {{ stay.arrive_date|date:"M Y" }} — {{ stay.leave_date|date:"M d" }}
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

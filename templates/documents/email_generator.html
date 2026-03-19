@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Email Generator{% endblock %}
+{% block nav_reservations %}active{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+  <a href="{% url 'reservations:detail' res.pk %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back to Reservation</a>
+</div>
+<h5 class="mb-3">Generate Email — {{ res.guest.full_name }}</h5>
+
+<div class="row g-3">
+  <div class="col-md-8">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label small">To</label>
+            <input type="email" name="email_recipient" class="form-control form-control-sm"
+                   value="{{ res.guest.email }}">
+          </div>
+          <div class="mb-3">
+            <label class="form-label small">Subject</label>
+            <input type="text" name="email_subject" class="form-control form-control-sm"
+                   value="26 Schoolhouse Reservation — {{ res.arrive_date|date:'M d' }}–{{ res.leave_date|date:'M d, Y' }}">
+          </div>
+          <div class="mb-3">
+            <label class="form-label small">Body</label>
+            <textarea name="email_body" class="form-control form-control-sm" rows="18">{{ settings.salutation }}
+
+Dear {{ res.guest.first_name }},
+
+Thank you for your reservation at 26 Schoolhouse.
+
+RESERVATION DETAILS
+===================
+Arrive:  {{ res.arrive_date|date:"l, F j, Y" }}{% if res.arrive_time %} at {{ res.arrive_time|time:"g:i A" }}{% endif %}
+Depart:  {{ res.leave_date|date:"l, F j, Y" }}{% if res.leave_time %} at {{ res.leave_time|time:"g:i A" }}{% endif %}
+Nights:  {{ res.number_of_nights }}
+Guests:  {{ res.adults_count }} adult{{ res.adults_count|pluralize }}{% if res.children_count %}, {{ res.children_count }} child{{ res.children_count|pluralize:"ren" }}{% endif %}
+
+FEES
+====
+Rental:    ${{ res.rental_fee|default:"0"|floatformat:2 }}
+Cleaning:  ${{ res.cleaning_fee|default:"0"|floatformat:2 }}{% if res.additional_fee %}
+Additional: ${{ res.additional_fee|floatformat:2 }}{% if res.additional_fee_note %} ({{ res.additional_fee_note }}){% endif %}{% endif %}
+Total:     ${{ res.total_fee|floatformat:2 }}
+
+PAYMENTS
+========
+Payment 1 due: {{ res.pay_1_due|date:"F j, Y" }}
+Payment 2 due: {{ res.pay_2_due|date:"F j, Y" }}
+
+PIN: {{ res.pin }}
+
+{{ settings.closing }}</textarea>
+          </div>
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary btn-sm">Save Draft</button>
+            <a href="{% url 'reservations:detail' res.pk %}" class="btn btn-outline-secondary btn-sm">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h6 class="card-subtitle mb-2 text-muted text-uppercase" style="font-size:.72rem">Quick Reference</h6>
+        <table class="table table-sm" style="font-size:.8rem">
+          <tr><td class="text-muted">Guest</td><td>{{ res.guest.full_name }}</td></tr>
+          <tr><td class="text-muted">Arrive</td><td>{{ res.arrive_date|date:"M d, Y" }}</td></tr>
+          <tr><td class="text-muted">Leave</td><td>{{ res.leave_date|date:"M d, Y" }}</td></tr>
+          <tr><td class="text-muted">Total</td><td>${{ res.total_fee|floatformat:2 }}</td></tr>
+          <tr><td class="text-muted">Pmt 1 Due</td><td>{{ res.pay_1_due|date:"M d, Y" }}</td></tr>
+          <tr><td class="text-muted">Pmt 2 Due</td><td>{{ res.pay_2_due|date:"M d, Y" }}</td></tr>
+          <tr><td class="text-muted">PIN</td><td>{{ res.pin }}</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

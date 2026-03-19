@@ -1,0 +1,9 @@
+django==4.2.29
+psycopg2-binary==2.9.11
+whitenoise==6.11.0
+gunicorn==23.0.0
+python-decouple==3.8
+Pillow==11.3.0
+django-storages==1.14.6
+boto3==1.42.71
+dj-database-url==2.3.0

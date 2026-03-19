@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block nav_expenses %}active{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+  <a href="{% url 'expenses:list' %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back to Expenses</a>
+</div>
+<h5 class="mb-3">{{ title }}</h5>
+
+<form method="post" enctype="multipart/form-data" id="expense-form">
+  {% csrf_token %}
+  <div class="card shadow-sm" style="max-width:750px">
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-8">
+          <label class="form-label small">Title *</label>
+          {{ form.title }}
+        </div>
+        <div class="col-md-4">
+          <label class="form-label small">Expense Date</label>
+          {{ form.expense_date }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small">Amount</label>
+          {{ form.amount }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small">Category</label>
+          {{ form.tax_category }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small">Payment Method</label>
+          {{ form.payment_method }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small">Quantity</label>
+          {{ form.quantity }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small">Cost Per</label>
+          {{ form.cost_per }}
+        </div>
+        <div class="col-md-5">
+          <label class="form-label small">Order Number</label>
+          {{ form.order_number }}
+        </div>
+        <div class="col-md-2 d-flex align-items-end pb-1">
+          <div class="form-check">
+            {{ form.replaced_broken }}
+            <label class="form-check-label small ms-1">Replacing Broken</label>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="form-check">
+            {{ form.maintenance_trip }}
+            <label class="form-check-label small ms-1" id="maint-label">Maintenance Trip</label>
+          </div>
+        </div>
+        <div id="miles-section" class="col-md-3 {% if not form.instance.maintenance_trip %}d-none{% endif %}">
+          <label class="form-label small">Miles</label>
+          {{ form.miles }}
+          {% if expense and expense.miles %}
+          <div class="form-text text-muted" id="miles-calc">
+            = ${{ expense.miles_amount|floatformat:2 }} (at ${{ settings.mileage_rate }}/mi)
+          </div>
+          {% endif %}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small">Meal Amount</label>
+          {{ form.meal_amount }}
+        </div>
+        <div class="col-12">
+          <label class="form-label small">Note</label>
+          {{ form.note }}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label small">Receipt Photo</label>
+          {{ form.receipt }}
+          {% if expense and expense.receipt %}
+          <div class="mt-1">
+            <img src="{{ expense.receipt.url }}" style="max-height:80px;max-width:200px;border:1px solid #dee2e6;border-radius:4px">
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="card-footer bg-transparent d-flex gap-2">
+      <button type="submit" class="btn btn-primary">Save Expense</button>
+      <a href="{% url 'expenses:list' %}" class="btn btn-outline-secondary">Cancel</a>
+    </div>
+  </div>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('#expense-form input:not([type=checkbox]):not([type=file]), #expense-form select, #expense-form textarea').forEach(el => {
+  if (el.tagName === 'SELECT') el.classList.add('form-select', 'form-select-sm');
+  else el.classList.add('form-control', 'form-control-sm');
+});
+
+const maintCheck = document.getElementById('{{ form.maintenance_trip.id_for_label }}');
+const milesSection = document.getElementById('miles-section');
+if (maintCheck) {
+  maintCheck.addEventListener('change', () => {
+    milesSection.classList.toggle('d-none', !maintCheck.checked);
+  });
+}
+</script>
+{% endblock %}

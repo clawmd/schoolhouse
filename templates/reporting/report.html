@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Monthly Report — {{ year }}{% endblock %}
+{% block nav_reporting %}active{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h5 class="mb-0">Monthly Revenue Report — {{ year }}</h5>
+  <form class="d-flex gap-2" method="get">
+    <select name="year" class="form-select form-select-sm" style="width:120px" onchange="this.form.submit()">
+      {% for y in year_list %}
+      <option value="{{ y }}" {% if y == year %}selected{% endif %}>{{ y }}</option>
+      {% endfor %}
+    </select>
+  </form>
+</div>
+
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-hover table-sm mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Month</th>
+          <th class="text-end">Payment 1 Total</th>
+          <th class="text-end">Payment 2 Total</th>
+          <th class="text-end">Total Revenue</th>
+          <th class="text-end">Tax Due ({{ settings.tax_rate|floatformat:0 }}%)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for m in months %}
+        <tr>
+          <td>{{ m.month_name }}</td>
+          <td class="text-end">{% if m.p1_total %}${{ m.p1_total|floatformat:2 }}{% else %}<span class="text-muted">—</span>{% endif %}</td>
+          <td class="text-end">{% if m.p2_total %}${{ m.p2_total|floatformat:2 }}{% else %}<span class="text-muted">—</span>{% endif %}</td>
+          <td class="text-end {% if m.total_revenue %}fw-semibold{% endif %}">
+            {% if m.total_revenue %}${{ m.total_revenue|floatformat:2 }}{% else %}<span class="text-muted">—</span>{% endif %}
+          </td>
+          <td class="text-end text-danger">
+            {% if m.tax_due %}${{ m.tax_due|floatformat:2 }}{% else %}<span class="text-muted">—</span>{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<p class="text-muted mt-2" style="font-size:.8rem">Tax rate: {{ settings.tax_rate|floatformat:0 }}% of total revenue received. Revenue is tracked by payment receipt date.</p>
+{% endblock %}

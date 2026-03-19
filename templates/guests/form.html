@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block nav_guests %}active{% endblock %}
+
+{% block extra_head %}
+<style>
+  .form-section { border-left: 3px solid #dee2e6; padding-left: 1rem; margin-bottom: 1.5rem; }
+  .form-section-title { font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; color:#6c757d; margin-bottom:.75rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+  {% if guest %}
+  <a href="{% url 'guests:detail' guest.pk %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back</a>
+  {% else %}
+  <a href="{% url 'guests:list' %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back to Guests</a>
+  {% endif %}
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h5 class="mb-0">{{ title }}</h5>
+</div>
+
+{% if guest and guest.has_duplicate_name %}
+<div class="alert alert-warning py-2">
+  <i class="bi bi-exclamation-triangle"></i>
+  Another guest with this name already exists.
+</div>
+{% endif %}
+
+<form method="post" id="guest-form">
+  {% csrf_token %}
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <div class="form-section">
+        <div class="form-section-title">Name</div>
+        <div class="row g-2">
+          <div class="col-md-1">
+            <label class="form-label small">Title</label>
+            {{ form.title }}
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small">First Name *</label>
+            {{ form.first_name }}
+          </div>
+          <div class="col-md-1">
+            <label class="form-label small">MI</label>
+            {{ form.middle_initial }}
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small">Last Name *</label>
+            {{ form.last_name }}
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small">Partner Name</label>
+            {{ form.partner_name }}
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">Address</div>
+        <div class="row g-2">
+          <div class="col-md-8">
+            <label class="form-label small">Address 1</label>
+            {{ form.address1 }}
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small">Address 2</label>
+            {{ form.address2 }}
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small">City</label>
+            {{ form.city }}
+          </div>
+          <div class="col-md-2">
+            <label class="form-label small">State</label>
+            {{ form.state }}
+          </div>
+          <div class="col-md-2">
+            <label class="form-label small">Zip</label>
+            {{ form.zip_code }}
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small">Country</label>
+            {{ form.country }}
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">Contact</div>
+        <div class="row g-2">
+          <div class="col-md-3">
+            <label class="form-label small">Phone Home</label>
+            {{ form.phone_home }}
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small">Phone Cell</label>
+            {{ form.phone_cell }}
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small">Phone Cell 2</label>
+            {{ form.phone_cell2 }}
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small">PIN <span class="text-muted">(auto from cell)</span></label>
+            {{ form.pin }}
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small">Email *</label>
+            {{ form.email }}
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small">Email 2</label>
+            {{ form.email2 }}
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small">Desirability</label>
+            {{ form.desirability }}
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">Notes</div>
+        <div class="row g-2">
+          <div class="col-12">
+            {{ form.notes }}
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">HomeAway / VRBO <span class="text-muted fw-normal">(optional)</span></div>
+        <div class="row g-2">
+          <div class="col-md-3">
+            <label class="form-label small">HA Name</label>
+            {{ form.ha_name }}
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small">HA Reservation #</label>
+            {{ form.ha_reservation }}
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small">HA Email</label>
+            {{ form.ha_email }}
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small">HA Phone</label>
+            {{ form.ha_phone }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer bg-transparent d-flex gap-2">
+      <button type="submit" class="btn btn-primary">Save Guest</button>
+      {% if guest %}
+      <a href="{% url 'guests:detail' guest.pk %}" class="btn btn-outline-secondary">Cancel</a>
+      {% else %}
+      <a href="{% url 'guests:list' %}" class="btn btn-outline-secondary">Cancel</a>
+      {% endif %}
+    </div>
+  </div>
+</form>
+
+{% if form.errors %}
+<div class="alert alert-danger mt-3">
+  {% for field in form %}{% for error in field.errors %}<div>{{ field.label }}: {{ error }}</div>{% endfor %}{% endfor %}
+  {% for error in form.non_field_errors %}<div>{{ error }}</div>{% endfor %}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Add Bootstrap form-control class to all inputs
+document.querySelectorAll('#guest-form input, #guest-form select, #guest-form textarea').forEach(el => {
+  if (!el.classList.contains('form-control') && !el.classList.contains('form-select')) {
+    if (el.tagName === 'SELECT') {
+      el.classList.add('form-select', 'form-select-sm');
+    } else if (el.tagName === 'TEXTAREA') {
+      el.classList.add('form-control', 'form-control-sm');
+      el.rows = 3;
+    } else {
+      el.classList.add('form-control', 'form-control-sm');
+    }
+  }
+});
+</script>
+{% endblock %}

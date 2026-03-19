@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>House Rules</title>
+  <style>
+    @media print { .no-print { display: none; } body { margin: 0; } }
+    body { font-family: Georgia, 'Times New Roman', serif; font-size: 11pt; margin: 1in; color: #000; background: #fff; }
+    h1 { font-size: 14pt; margin-bottom: 4px; }
+    h2 { font-size: 12pt; margin: 18px 0 4px 0; border-bottom: 1px solid #000; padding-bottom: 2px; }
+    .no-print { margin-bottom: 16px; }
+    .sig-line { border-bottom: 1px solid #000; margin-top: 40px; margin-bottom: 4px; }
+  </style>
+</head>
+<body>
+<div class="no-print">
+  <button onclick="window.print()">Print</button>
+  <button onclick="window.close()">Close</button>
+</div>
+
+<h1>26 Schoolhouse — House Rules</h1>
+<p><strong>Guest:</strong> {{ res.guest.full_name }} &nbsp;&nbsp;&nbsp; <strong>Arrive:</strong> {{ res.arrive_date|date:"M d, Y" }} &nbsp;&nbsp;&nbsp; <strong>Depart:</strong> {{ res.leave_date|date:"M d, Y" }}</p>
+
+<h2>General Rules</h2>
+<ol>
+  <li>No smoking inside the property.</li>
+  <li>Maximum occupancy as stated in the reservation agreement. No additional guests without owner approval.</li>
+  <li>Check-in time is 3:00 PM. Check-out time is 11:00 AM.</li>
+  <li>No parties or events without prior written approval.</li>
+  <li>Guests are responsible for any damage caused during their stay.</li>
+  <li>Please leave the property in the same condition as it was found.</li>
+  <li>All garbage must be placed in designated bins.</li>
+  <li>Please conserve water and electricity.</li>
+  <li>No alterations to the property.</li>
+  <li>Owner access: Owner reserves the right to access property in case of emergency.</li>
+</ol>
+
+<h2>Quiet Hours</h2>
+<p>Quiet hours are 10:00 PM to 8:00 AM. Please be respectful of neighbors.</p>
+
+<h2>Parking</h2>
+<p>Parking is available in the designated areas only.</p>
+
+<h2>Pets</h2>
+<p>Pets are {% if res.pets %}approved for this reservation{% else %}not permitted{% endif %} unless specifically approved in the reservation agreement.</p>
+
+<h2>Liability</h2>
+<p>Owner is not responsible for accidents, injuries, or loss of personal property. Guests agree to indemnify and hold harmless the property owner from any claims arising from their stay.</p>
+
+<div class="sig-line">&nbsp;</div>
+<p>Guest Signature (acknowledging House Rules) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date</p>
+
+<script>window.print();</script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Contract — {{ res.guest }}</title>
+  <style>
+    @media print {
+      .no-print { display: none; }
+      body { margin: 0; }
+    }
+    body { font-family: Georgia, 'Times New Roman', serif; font-size: 11pt; margin: 1in; color: #000; background: #fff; }
+    h1 { font-size: 14pt; margin-bottom: 4px; }
+    h2 { font-size: 12pt; margin: 18px 0 4px 0; border-bottom: 1px solid #000; padding-bottom: 2px; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
+    td { padding: 3px 6px; vertical-align: top; }
+    td.label { font-weight: bold; width: 45%; }
+    .sig-line { border-bottom: 1px solid #000; margin-top: 40px; margin-bottom: 4px; }
+    .no-print { margin-bottom: 16px; }
+  </style>
+</head>
+<body>
+<div class="no-print">
+  <button onclick="window.print()">Print</button>
+  <button onclick="window.close()">Close</button>
+</div>
+
+<h1>26 Schoolhouse — Rental Agreement</h1>
+
+<h2>Guest Information</h2>
+<table>
+  <tr><td class="label">Guest Name:</td><td>{{ res.guest.full_name }}</td></tr>
+  {% if res.guest.address1 %}
+  <tr><td class="label">Address:</td><td>{{ res.guest.address1 }}{% if res.guest.address2 %}, {{ res.guest.address2 }}{% endif %}<br>
+    {{ res.guest.city }}{% if res.guest.city and res.guest.state %}, {% endif %}{{ res.guest.state }} {{ res.guest.zip_code }}</td></tr>
+  {% endif %}
+  <tr><td class="label">Phone:</td><td>{{ res.guest.phone_cell|default:res.guest.phone_home }}</td></tr>
+  <tr><td class="label">Email:</td><td>{{ res.guest.email }}</td></tr>
+</table>
+
+<h2>Reservation</h2>
+<table>
+  <tr><td class="label">Arrive:</td><td>{{ res.arrive_date|date:"l, F j, Y" }}{% if res.arrive_time %} at {{ res.arrive_time|time:"g:i A" }}{% endif %}</td></tr>
+  <tr><td class="label">Depart:</td><td>{{ res.leave_date|date:"l, F j, Y" }}{% if res.leave_time %} at {{ res.leave_time|time:"g:i A" }}{% endif %}</td></tr>
+  <tr><td class="label">Number of Nights:</td><td>{{ res.number_of_nights }}</td></tr>
+  <tr><td class="label">Adults:</td><td>{{ res.adults_count }}</td></tr>
+  <tr><td class="label">Children:</td><td>{{ res.children_count }}</td></tr>
+  <tr><td class="label">Pets:</td><td>{% if res.pets %}Yes{% else %}No{% endif %}</td></tr>
+</table>
+
+<h2>Fees</h2>
+<table>
+  <tr><td class="label">Rental Fee:</td><td>${{ res.rental_fee|default:"0"|floatformat:2 }}</td></tr>
+  <tr><td class="label">Cleaning Fee:</td><td>${{ res.cleaning_fee|default:"0"|floatformat:2 }}</td></tr>
+  {% if res.additional_fee %}
+  <tr><td class="label">Additional Fee{% if res.additional_fee_note %} ({{ res.additional_fee_note }}){% endif %}:</td><td>${{ res.additional_fee|floatformat:2 }}</td></tr>
+  {% endif %}
+  {% if res.tax_fee %}
+  <tr><td class="label">Tax:</td><td>${{ res.tax_fee|floatformat:2 }}</td></tr>
+  {% endif %}
+  <tr><td class="label"><strong>Total:</strong></td><td><strong>${{ res.total_fee|floatformat:2 }}</strong></td></tr>
+  <tr><td class="label">Security Deposit:</td><td>${{ res.deposit|default:"0"|floatformat:2 }}</td></tr>
+</table>
+
+<h2>Payment Schedule</h2>
+<table>
+  <tr><td class="label">Payment 1 Due:</td><td>{{ res.pay_1_due|date:"F j, Y" }}</td></tr>
+  <tr><td class="label">Payment 2 Due:</td><td>{{ res.pay_2_due|date:"F j, Y" }}</td></tr>
+  <tr><td class="label">Payment Method:</td><td>{{ res.payment_type }}</td></tr>
+</table>
+
+{% if settings.owner_address1 %}
+<p>Checks payable to {{ settings.owner_first_name }} {{ settings.owner_last_name }}<br>
+Mail to: {{ settings.owner_address1 }}, {{ settings.owner_city }}, {{ settings.owner_state }} {{ settings.owner_zip }}</p>
+{% endif %}
+
+<h2>Agreement</h2>
+<p>The undersigned agrees to the terms of this rental agreement and the attached House Rules.</p>
+
+<div class="sig-line">&nbsp;</div>
+<p>Guest Signature &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date</p>
+
+<div class="sig-line">&nbsp;</div>
+<p>Owner Signature &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date</p>
+
+<script>window.print();</script>
+</body>
+</html>

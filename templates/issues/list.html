@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Issues{% endblock %}
+{% block nav_issues %}active{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h5 class="mb-0 d-inline">Issues</h5>
+    <span class="ms-3">
+      <a href="?show=open" class="btn btn-sm {% if show == 'open' %}btn-primary{% else %}btn-outline-secondary{% endif %}">Open</a>
+      <a href="?show=closed" class="btn btn-sm {% if show == 'closed' %}btn-primary{% else %}btn-outline-secondary{% endif %}">Closed</a>
+      <a href="?show=all" class="btn btn-sm {% if show == 'all' %}btn-primary{% else %}btn-outline-secondary{% endif %}">All</a>
+    </span>
+  </div>
+  <a href="{% url 'issues:new' %}" class="btn btn-primary btn-sm"><i class="bi bi-plus"></i> New Issue</a>
+</div>
+
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-hover table-sm mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Title</th>
+          <th>Priority</th>
+          <th>Attention</th>
+          <th>Created</th>
+          <th>Resolved</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for issue in issues %}
+        <tr>
+          <td>
+            {{ issue.title }}
+            {% if issue.note %}<br><small class="text-muted">{{ issue.note|truncatechars:80 }}</small>{% endif %}
+          </td>
+          <td>
+            {% if issue.priority %}
+            <span class="badge bg-{% if issue.priority == 'critical' or issue.priority == 'high' %}danger{% elif issue.priority == 'med' %}warning text-dark{% else %}secondary{% endif %}">
+              {{ issue.get_priority_display }}
+            </span>
+            {% endif %}
+          </td>
+          <td>{% if issue.needs_attention %}<span class="badge bg-warning text-dark"><i class="bi bi-exclamation-triangle"></i> Attention</span>{% endif %}</td>
+          <td>{{ issue.created_at|date:"M d, Y" }}</td>
+          <td>{{ issue.completion_date|date:"M d, Y"|default:"—" }}</td>
+          <td class="text-end">
+            {% if issue.is_open %}
+            <a href="{% url 'issues:complete' issue.pk %}" class="btn btn-sm btn-outline-success py-0">Resolve</a>
+            {% endif %}
+            <a href="{% url 'issues:edit' issue.pk %}" class="btn btn-sm btn-outline-secondary py-0 ms-1">Edit</a>
+            {% if user.is_staff %}
+            <a href="{% url 'issues:delete' issue.pk %}" class="btn btn-sm btn-outline-danger py-0 ms-1">Del</a>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" class="text-muted text-center py-3">No issues found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

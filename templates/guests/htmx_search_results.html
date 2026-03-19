@@ -1,0 +1,9 @@
+{% for guest in guests %}
+<div class="dropdown-item guest-option" style="cursor:pointer"
+     data-pk="{{ guest.pk }}" data-name="{{ guest.full_name }}">
+  {{ guest.last_name }}, {{ guest.first_name }}
+  {% if guest.city %}<small class="text-muted ms-1">— {{ guest.city }}</small>{% endif %}
+</div>
+{% empty %}
+<div class="dropdown-item text-muted">No guests found</div>
+{% endfor %}

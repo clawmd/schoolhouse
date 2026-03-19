@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pet Addendum — {{ res.guest }}</title>
+  <style>
+    @media print { .no-print { display: none; } body { margin: 0; } }
+    body { font-family: Georgia, 'Times New Roman', serif; font-size: 11pt; margin: 1in; color: #000; background: #fff; }
+    h1 { font-size: 14pt; margin-bottom: 4px; }
+    h2 { font-size: 12pt; margin: 18px 0 4px 0; border-bottom: 1px solid #000; padding-bottom: 2px; }
+    .no-print { margin-bottom: 16px; }
+    .sig-line { border-bottom: 1px solid #000; margin-top: 40px; margin-bottom: 4px; }
+  </style>
+</head>
+<body>
+<div class="no-print">
+  <button onclick="window.print()">Print</button>
+  <button onclick="window.close()">Close</button>
+</div>
+
+<h1>26 Schoolhouse — Pet Addendum</h1>
+<p><strong>Guest:</strong> {{ res.guest.full_name }} &nbsp;&nbsp;&nbsp; <strong>Dates:</strong> {{ res.arrive_date|date:"M d" }} – {{ res.leave_date|date:"M d, Y" }}</p>
+
+<h2>Pet Policy</h2>
+<p>This addendum permits the guest to bring a pet(s) to the property subject to the following conditions:</p>
+<ol>
+  <li>Pet(s) must be kept under control at all times and not left unattended inside the property.</li>
+  <li>Pet(s) are not permitted on furniture or beds.</li>
+  <li>Guest is responsible for cleaning up after pet(s) on the property and surrounding areas.</li>
+  <li>Any damage caused by pet(s) will be charged to the guest. Damage charges will be deducted from the security deposit and any excess billed directly.</li>
+  <li>Guest agrees to have pet(s) flea-treated before arrival.</li>
+  <li>Excessive pet hair or odor requiring special cleaning will result in additional cleaning fees.</li>
+  <li>Pet(s) must not disturb neighbors. Excessive barking or noise may result in early termination of the reservation without refund.</li>
+</ol>
+
+<p>By signing below, the guest acknowledges and agrees to all pet policy conditions stated above.</p>
+
+<div class="sig-line">&nbsp;</div>
+<p>Guest Signature &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date</p>
+
+<script>window.print();</script>
+</body>
+</html>

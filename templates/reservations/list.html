@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Reservations{% endblock %}
+{% block nav_reservations %}active{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h5 class="mb-0 d-inline">Reservations</h5>
+    <span class="ms-3">
+      <a href="?show=upcoming" class="btn btn-sm {% if show == 'upcoming' %}btn-primary{% else %}btn-outline-secondary{% endif %}">Upcoming</a>
+      <a href="?show=past" class="btn btn-sm {% if show == 'past' %}btn-primary{% else %}btn-outline-secondary{% endif %}">Past</a>
+      <a href="?show=all" class="btn btn-sm {% if show == 'all' %}btn-primary{% else %}btn-outline-secondary{% endif %}">All</a>
+    </span>
+  </div>
+  <a href="{% url 'reservations:new' %}" class="btn btn-primary btn-sm"><i class="bi bi-plus"></i> New Reservation</a>
+</div>
+
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-hover table-sm mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Guest</th>
+          <th>Arrive</th>
+          <th>Leave</th>
+          <th>Nights</th>
+          <th>Status</th>
+          <th class="text-end">Total</th>
+          <th class="text-end">Balance</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for res in reservations %}
+        <tr {% if res.pay_1_overdue or res.pay_2_overdue %}class="table-danger"{% endif %}>
+          <td><a href="{% url 'reservations:detail' res.pk %}">{{ res.guest }}</a></td>
+          <td>{{ res.arrive_date|date:"M d, Y" }}</td>
+          <td>{{ res.leave_date|date:"M d, Y" }}</td>
+          <td>{{ res.number_of_nights }}</td>
+          <td><span class="badge bg-{{ res.status_color }}">{{ res.status|capfirst }}</span>
+            {% if res.has_overlap %}<span class="badge bg-warning text-dark ms-1">Overlap</span>{% endif %}
+          </td>
+          <td class="text-end">${{ res.total_fee|floatformat:2 }}</td>
+          <td class="text-end {% if res.balance > 0 %}text-danger{% endif %}">${{ res.balance|floatformat:2 }}</td>
+          <td class="text-end">
+            <a href="{% url 'reservations:detail' res.pk %}" class="btn btn-sm btn-outline-secondary py-0">View</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="8" class="text-muted text-center py-3">No reservations found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

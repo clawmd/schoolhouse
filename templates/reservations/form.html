@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block nav_reservations %}active{% endblock %}
+
+{% block extra_head %}
+<style>
+  .form-section { border-left: 3px solid #dee2e6; padding-left: 1rem; margin-bottom: 1.5rem; }
+  .form-section-title { font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; color:#6c757d; margin-bottom:.75rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+  {% if res %}
+  <a href="{% url 'reservations:detail' res.pk %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back</a>
+  {% else %}
+  <a href="{% url 'reservations:list' %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back to Reservations</a>
+  {% endif %}
+</div>
+
+<h5 class="mb-3">{{ title }}</h5>
+
+<form method="post" id="res-form">
+  {% csrf_token %}
+  <div class="card shadow-sm mb-3">
+    <div class="card-body">
+      <div class="form-section">
+        <div class="form-section-title">Guest &amp; Dates</div>
+        <div class="row g-2">
+          <div class="col-md-6">
+            <label class="form-label small">Guest *</label>
+            {{ form.guest }}
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small">Arrive Date *</label>
+            {{ form.arrive_date }}
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small">Leave Date *</label>
+            {{ form.leave_date }}
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small">Arrive Time</label>
+            {{ form.arrive_time }}
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small">Leave Time</label>
+            {{ form.leave_time }}
+          </div>
+          <div class="col-md-2">
+            <label class="form-label small">Adults</label>
+            {{ form.adults_count }}
+          </div>
+          <div class="col-md-2">
+            <label class="form-label small">Children</label>
+            {{ form.children_count }}
+          </div>
+          <div class="col-md-2 d-flex align-items-end pb-1">
+            <div class="form-check">
+              {{ form.pets }}
+              <label class="form-check-label small ms-1" for="{{ form.pets.id_for_label }}">Pets</label>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small">Source</label>
+            {{ form.source }}
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small">Season</label>
+            {{ form.season }}
+          </div>
+          <div class="col-12">
+            <label class="form-label small">Notes</label>
+            {{ form.notes }}
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">Fees</div>
+        <div class="row g-2">
+          <div class="col-md-2">
+            <label class="form-label small">Rental Fee</label>
+            {{ form.rental_fee }}
+          </div>
+          <div class="col-md-2">
+            <label class="form-label small">Cleaning Fee</label>
+            {{ form.cleaning_fee }}
+          </div>
+          <div class="col-md-2">
+            <label class="form-label small">Additional Fee</label>
+            {{ form.additional_fee }}
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small">Additional Note</label>
+            {{ form.additional_fee_note }}
+          </div>
+          <div class="col-md-2">
+            <label class="form-label small">Tax Fee</label>
+            {{ form.tax_fee }}
+          </div>
+          <div class="col-md-2">
+            <label class="form-label small">Deposit</label>
+            {{ form.deposit }}
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">Payments</div>
+        <div class="row g-2">
+          <div class="col-md-3">
+            <label class="form-label small">Payment Type</label>
+            {{ form.payment_type }}
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small">Contract</label>
+            {{ form.payment_contract_how_many }}
+          </div>
+        </div>
+        <div class="row g-2 mt-1">
+          <div class="col-12"><small class="text-muted text-uppercase" style="letter-spacing:.04em">Payment 1</small></div>
+          <div class="col-md-2">
+            <label class="form-label small">Amount</label>
+            {{ form.payment_1_actual }}
+          </div>
+          <div class="col-md-2">
+            <label class="form-label small">Date</label>
+            {{ form.payment_1_date }}
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small">Note</label>
+            {{ form.payment_1_note }}
+          </div>
+        </div>
+        <div class="row g-2 mt-1">
+          <div class="col-12"><small class="text-muted text-uppercase" style="letter-spacing:.04em">Payment 2</small></div>
+          <div class="col-md-2">
+            <label class="form-label small">Amount</label>
+            {{ form.payment_2_actual }}
+          </div>
+          <div class="col-md-2">
+            <label class="form-label small">Date</label>
+            {{ form.payment_2_date }}
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small">Note</label>
+            {{ form.payment_2_note }}
+          </div>
+        </div>
+        <div class="row g-2 mt-1">
+          <div class="col-md-2">
+            <label class="form-label small">Deposit Received</label>
+            {{ form.payment_deposit_received }}
+          </div>
+          <div class="col-md-2">
+            <label class="form-label small">Deposit Returned Amt</label>
+            {{ form.deposit_amount_returned }}
+          </div>
+          <div class="col-md-2 d-flex align-items-end pb-1">
+            <div class="form-check">
+              {{ form.deposit_returned }}
+              <label class="form-check-label small ms-1">Deposit Returned</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">Status Tracking</div>
+        <div class="row g-2">
+          <div class="col-md-2 d-flex align-items-end pb-1">
+            <div class="form-check">{{ form.confirm_sent }}<label class="form-check-label small ms-1">Confirm Sent</label></div>
+          </div>
+          <div class="col-md-2 d-flex align-items-end pb-1">
+            <div class="form-check">{{ form.precheck_email_sent }}<label class="form-check-label small ms-1">Precheck Sent</label></div>
+          </div>
+          <div class="col-md-2 d-flex align-items-end pb-1">
+            <div class="form-check">{{ form.contract_rules_sent }}<label class="form-check-label small ms-1">Contract Sent</label></div>
+          </div>
+          <div class="col-md-2">
+            <label class="form-label small">Contract Status</label>
+            {{ form.contract_rules_status }}
+          </div>
+          <div class="col-md-2 d-flex align-items-end pb-1">
+            <div class="form-check">{{ form.contract_pet_sent }}<label class="form-check-label small ms-1">Pet Rules Sent</label></div>
+          </div>
+          <div class="col-md-2">
+            <label class="form-label small">Pet Rules Status</label>
+            {{ form.contract_pet_status }}
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">HomeAway / VRBO <span class="text-muted fw-normal">(optional)</span></div>
+        <div class="row g-2">
+          <div class="col-md-4">
+            <label class="form-label small">HA Name</label>
+            {{ form.ha_name }}
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small">HA Reservation #</label>
+            {{ form.ha_reservation }}
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small">HA Check-in Info</label>
+            {{ form.ha_checkin }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer bg-transparent d-flex gap-2">
+      <button type="submit" class="btn btn-primary">Save Reservation</button>
+      {% if res %}
+      <a href="{% url 'reservations:detail' res.pk %}" class="btn btn-outline-secondary">Cancel</a>
+      {% else %}
+      <a href="{% url 'reservations:list' %}" class="btn btn-outline-secondary">Cancel</a>
+      {% endif %}
+    </div>
+  </div>
+</form>
+
+{% if form.errors %}
+<div class="alert alert-danger">
+  {% for field in form %}{% for error in field.errors %}<div>{{ field.label }}: {{ error }}</div>{% endfor %}{% endfor %}
+  {% for error in form.non_field_errors %}<div>{{ error }}</div>{% endfor %}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('#res-form input:not([type=checkbox]), #res-form select, #res-form textarea').forEach(el => {
+  if (!el.classList.contains('form-control') && !el.classList.contains('form-select')) {
+    if (el.tagName === 'SELECT') el.classList.add('form-select', 'form-select-sm');
+    else el.classList.add('form-control', 'form-control-sm');
+  }
+});
+</script>
+{% endblock %}

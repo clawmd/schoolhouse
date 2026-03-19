@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Rates{% endblock %}
+{% block nav_rates %}active{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h5 class="mb-0">Rental Rates</h5>
+  <a href="{% url 'reservations:rate_new' %}" class="btn btn-primary btn-sm"><i class="bi bi-plus"></i> New Rate Period</a>
+</div>
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-hover table-sm mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Season</th>
+          <th>Date Start</th>
+          <th>Date End</th>
+          <th class="text-end">Weekly</th>
+          <th class="text-end">Daily</th>
+          <th class="text-end">Weekly (CC)</th>
+          <th class="text-end">Daily (CC)</th>
+          <th class="text-end">Deposit</th>
+          <th class="text-end">Cleaning</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for rate in rates %}
+        <tr>
+          <td>{{ rate.season }}</td>
+          <td>{{ rate.date_start|date:"M d, Y" }}</td>
+          <td>{{ rate.date_end|date:"M d, Y" }}</td>
+          <td class="text-end">{% if rate.rate_weekly %}${{ rate.rate_weekly|floatformat:2 }}{% endif %}</td>
+          <td class="text-end">{% if rate.rate_daily %}${{ rate.rate_daily|floatformat:2 }}{% endif %}</td>
+          <td class="text-end">{% if rate.rate_weekly_cc %}${{ rate.rate_weekly_cc|floatformat:2 }}{% endif %}</td>
+          <td class="text-end">{% if rate.rate_daily_cc %}${{ rate.rate_daily_cc|floatformat:2 }}{% endif %}</td>
+          <td class="text-end">{% if rate.deposit %}${{ rate.deposit|floatformat:2 }}{% endif %}</td>
+          <td class="text-end">{% if rate.cleaning %}${{ rate.cleaning|floatformat:2 }}{% endif %}</td>
+          <td class="text-end">
+            <a href="{% url 'reservations:rate_edit' rate.pk %}" class="btn btn-sm btn-outline-secondary py-0">Edit</a>
+            <a href="{% url 'reservations:rate_delete' rate.pk %}" class="btn btn-sm btn-outline-danger py-0 ms-1">Del</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="10" class="text-muted text-center py-3">No rates defined.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

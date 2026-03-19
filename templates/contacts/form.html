@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block nav_contacts %}active{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+  <a href="{% url 'contacts:list' %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back to Contacts</a>
+</div>
+<h5 class="mb-3">{{ title }}</h5>
+
+<form method="post" id="contact-form">
+  {% csrf_token %}
+  <div class="card shadow-sm" style="max-width:700px">
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label small">Company</label>
+          {{ form.company }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small">First Name</label>
+          {{ form.first_name }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small">Last Name</label>
+          {{ form.last_name }}
+        </div>
+        <div class="col-md-5">
+          <label class="form-label small">Service Type</label>
+          {{ form.service_type }}
+        </div>
+        <div class="col-md-5">
+          <label class="form-label small">Website</label>
+          {{ form.website }}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label small">Address 1</label>
+          {{ form.address1 }}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label small">Address 2</label>
+          {{ form.address2 }}
+        </div>
+        <div class="col-md-4">
+          <label class="form-label small">City</label>
+          {{ form.city }}
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small">State</label>
+          {{ form.state }}
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small">Zip</label>
+          {{ form.zip_code }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small">Phone Office</label>
+          {{ form.phone_office }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small">Phone Cell</label>
+          {{ form.phone_cell }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small">Phone Home</label>
+          {{ form.phone_home }}
+        </div>
+        <div class="col-md-4">
+          <label class="form-label small">Email</label>
+          {{ form.email }}
+        </div>
+        <div class="col-md-4">
+          <label class="form-label small">Email 2</label>
+          {{ form.email2 }}
+        </div>
+        <div class="col-12">
+          <label class="form-label small">Notes</label>
+          {{ form.notes }}
+        </div>
+      </div>
+    </div>
+    <div class="card-footer bg-transparent d-flex gap-2">
+      <button type="submit" class="btn btn-primary">Save Contact</button>
+      <a href="{% url 'contacts:list' %}" class="btn btn-outline-secondary">Cancel</a>
+    </div>
+  </div>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('#contact-form input, #contact-form select, #contact-form textarea').forEach(el => {
+  if (el.tagName === 'SELECT') el.classList.add('form-select', 'form-select-sm');
+  else if (el.tagName === 'TEXTAREA') { el.classList.add('form-control', 'form-control-sm'); el.rows = 3; }
+  else el.classList.add('form-control', 'form-control-sm');
+});
+</script>
+{% endblock %}
