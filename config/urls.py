@@ -4,14 +4,6 @@ from django.contrib.auth import views as auth_views
 from django.shortcuts import redirect
 from django.conf import settings
 from django.conf.urls.static import static
-from django.http import HttpResponse
-from django.contrib.auth.models import User
-
-def dbcheck(request):
-    db = settings.DATABASES['default']['ENGINE']
-    name = settings.DATABASES['default'].get('NAME', '')
-    users = list(User.objects.values_list('username', flat=True))
-    return HttpResponse(f"DB: {db}<br>Name: {name}<br>Users: {users}")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,5 +20,4 @@ urlpatterns = [
     path('reporting/', include('reporting.urls')),
     path('settings/', include('core.urls')),
     path('calendar/', include('reservations.calendar_urls')),
-    path('dbcheck/', dbcheck),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
