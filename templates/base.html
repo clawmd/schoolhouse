@@ -67,6 +67,8 @@
   <!-- Sidebar -->
   <nav id="sidebar">
     <ul class="nav flex-column">
+      <li><a class="nav-link {% block nav_dashboard %}{% endblock %}" href="{% url 'core:dashboard' %}">
+        <i class="bi bi-house"></i> Dashboard</a></li>
       <li><a class="nav-link {% block nav_reservations %}{% endblock %}" href="{% url 'reservations:list' %}">
         <i class="bi bi-calendar-check"></i> Reservations</a></li>
       <li><a class="nav-link {% block nav_calendar %}{% endblock %}" href="{% url 'reservations:calendar' %}">

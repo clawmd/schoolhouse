@@ -5,4 +5,5 @@ app_name = 'core'
 
 urlpatterns = [
     path('', views.settings_view, name='settings'),
+    path('dashboard/', views.dashboard, name='dashboard'),
 ]
