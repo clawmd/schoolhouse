@@ -1,15 +1,22 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>House Rules</title>
+  <title>House Rules — {{ res.guest }}</title>
   <style>
     @media print { .no-print { display: none; } body { margin: 0; } }
-    body { font-family: Georgia, 'Times New Roman', serif; font-size: 11pt; margin: 1in; color: #000; background: #fff; }
-    h1 { font-size: 14pt; margin-bottom: 4px; }
-    h2 { font-size: 12pt; margin: 18px 0 4px 0; border-bottom: 1px solid #000; padding-bottom: 2px; }
+    body { font-family: Georgia, 'Times New Roman', serif; font-size: 11pt; margin: .75in; color: #000; background: #fff; line-height: 1.5; }
+    .header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 4px; }
+    .header-logo { width: 80px; flex-shrink: 0; }
+    .header-logo img { width: 80px; }
+    .header-text { flex: 1; text-align: center; }
+    h1 { font-size: 22pt; margin: 0 0 2px 0; }
+    .subtitle { text-align: center; font-weight: bold; font-size: 13pt; margin-bottom: 2px; }
+    hr { border: none; border-top: 2px solid #000; margin: 6px 0 16px 0; }
+    ol li { margin-bottom: 10px; }
+    .sig-line { border-bottom: 1px solid #000; display: inline-block; width: 260px; }
     .no-print { margin-bottom: 16px; }
-    .sig-line { border-bottom: 1px solid #000; margin-top: 40px; margin-bottom: 4px; }
   </style>
 </head>
 <body>
@@ -18,37 +25,56 @@
   <button onclick="window.close()">Close</button>
 </div>
 
-<h1>26 Schoolhouse — House Rules</h1>
-<p><strong>Guest:</strong> {{ res.guest.full_name }} &nbsp;&nbsp;&nbsp; <strong>Arrive:</strong> {{ res.arrive_date|date:"M d, Y" }} &nbsp;&nbsp;&nbsp; <strong>Depart:</strong> {{ res.leave_date|date:"M d, Y" }}</p>
+<div class="header">
+  <div class="header-logo"><img src="{% static 'images/egretlogo.png' %}" alt="26 School House"></div>
+  <div class="header-text">
+    <h1>26 School House</h1>
+    <div class="subtitle">Exhibit A</div>
+    <div class="subtitle">RENTAL RULES</div>
+  </div>
+  <div style="width:80px"></div>
+</div>
+<hr>
 
-<h2>General Rules</h2>
 <ol>
-  <li>No smoking inside the property.</li>
-  <li>Maximum occupancy as stated in the reservation agreement. No additional guests without owner approval.</li>
-  <li>Check-in time is 3:00 PM. Check-out time is 11:00 AM.</li>
-  <li>No parties or events without prior written approval.</li>
-  <li>Guests are responsible for any damage caused during their stay.</li>
-  <li>Please leave the property in the same condition as it was found.</li>
-  <li>All garbage must be placed in designated bins.</li>
-  <li>Please conserve water and electricity.</li>
-  <li>No alterations to the property.</li>
-  <li>Owner access: Owner reserves the right to access property in case of emergency.</li>
+  <li><strong>Smoking is NOT allowed</strong> in the home.</li>
+
+  <li>The person signing this contract must be present during the entire rental period and must be at least 25 years of age.</li>
+
+  <li><strong>NO EVENTS</strong> of any kind are allowed on the property. The GUEST agrees to NOT have any type of event at the house, including (but not limited to) Wedding, graduation, bachelor party, bachelorette party.</li>
+
+  <li>Instructions for the use of the home including, but not limited to, appliances, faucets, theater, sound system, door locks, grill, pizza oven, thermostats, are available at www.26Schoolhouse.com. None of these devices can be used until the user has read these instructions.</li>
+
+  <li>The Rental Property is located in a quiet residential neighborhood. Quiet time is from 10:00 pm until 8:00 am. The GUEST agrees not to undertake any activities that interfere with the neighbors' right to quiet enjoyment of their property. The GUEST agrees to fully comply with local noise regulations and to use common sense in keeping noise volume low after dark. Any enforcement actions by local law enforcement or Mason's Island Owner Association are at the GUEST'S sole risk and expense and may result in additional charges or immediate eviction without refund of any deposits or rents.</li>
+
+  <li>The GUEST will inform management IMMEDIATELY if there are any issues with the home. ESPECIALLY with any water leakage or other typical home maintenance issue that may cause substantial damage to the home if not remedied immediately.</li>
+
+  <li>Video Surveillance: The parking area is on camera. Two other cameras are in use. One camera is aimed at the osprey nest and the second camera demonstrates the view from the front of the house (does not show lawn area, it does show the last couple feet of dock.) Both of these camera views can be seen at www.26schoolhouse.com</li>
+
+  <li>Guest agrees to keep the property and all furnishings in good order.</li>
+
+  <li>The layout of the furniture, decorations, and carpeting has been carefully planned. No rearrangement of these items is permitted. Moving items back into place will be charged at a rate of $50/hr and deducted from the deposit fee.</li>
+
+  <li>Garbage. All trash is to be collected and put into the yellow Stonington bags provided. When full, yellow trash bags are to be placed in the screened box outside the kitchen door near the seawall. Trash is picked up EARLY Thursday AM</li>
+
+  <li>Deck above Sunroom. No more than 3 adults are permitted on the deck. Children are not permitted on the deck at any time.</li>
+
+  <li>Refrigerator. All food must be removed from the large refrigerator and freezer before you leave. Condiments are left in the small refrigerator next to the stove for everybody's use</li>
+
+  <li>All dirty dishes are to be cleaned before you leave.</li>
+
+  <li>There is a considerable amount of poison ivy in the wooded areas. Do not let children or pets go into these areas. If you believe that you have contacted poison ivy, treat the affected areas as soon as possible with Tecnu, available at drugstores.</li>
+
+  <li>Ticks are prevalent in the area despite the best tick control efforts on the island. If you find a tick remove it with tweezers or a tick removing device. Consult your PCP about getting Doxycycline as a one time dose to prevent Lyme disease. See this site for more information: <a href="https://www.cdc.gov/ticks/tickbornediseases/tick-bites-prevention.html">https://www.cdc.gov/ticks/tickbornediseases/tick-bites-prevention.html</a></li>
+
+  <li>No Jet skis, all terrain vehicles or other noise making vehicles are permitted. Boats may be docked at the house with prior permission. Passive recreational boats and bicycles are welcome.</li>
 </ol>
 
-<h2>Quiet Hours</h2>
-<p>Quiet hours are 10:00 PM to 8:00 AM. Please be respectful of neighbors.</p>
-
-<h2>Parking</h2>
-<p>Parking is available in the designated areas only.</p>
-
-<h2>Pets</h2>
-<p>Pets are {% if res.pets %}approved for this reservation{% else %}not permitted{% endif %} unless specifically approved in the reservation agreement.</p>
-
-<h2>Liability</h2>
-<p>Owner is not responsible for accidents, injuries, or loss of personal property. Guests agree to indemnify and hold harmless the property owner from any claims arising from their stay.</p>
-
-<div class="sig-line">&nbsp;</div>
-<p>Guest Signature (acknowledging House Rules) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date</p>
+<br>
+<p>
+  Guest signature <span class="sig-line">&nbsp;</span> &nbsp;&nbsp;&nbsp; Date <span class="sig-line" style="width:120px">&nbsp;</span>
+</p>
+<p>Name: <span class="sig-line">{{ res.guest.full_name }}</span></p>
 
 <script>window.print();</script>
 </body>

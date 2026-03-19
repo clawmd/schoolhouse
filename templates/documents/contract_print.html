@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,9 +7,13 @@
   <style>
     @media print { .no-print { display: none; } body { margin: 0; } }
     body { font-family: Georgia, 'Times New Roman', serif; font-size: 11pt; margin: .75in; color: #000; background: #fff; line-height: 1.5; }
-    h1 { font-size: 22pt; text-align: center; margin-bottom: 2px; }
-    .subtitle { text-align: center; font-size: 13pt; font-weight: bold; margin-bottom: 2px; }
-    .subline { text-align: center; font-size: 11pt; margin-bottom: 20px; }
+    .header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 4px; }
+    .header-logo { width: 80px; flex-shrink: 0; }
+    .header-logo img { width: 80px; }
+    .header-text { flex: 1; text-align: center; }
+    h1 { font-size: 22pt; margin: 0 0 2px 0; }
+    .subtitle { font-size: 13pt; font-weight: bold; margin-bottom: 2px; }
+    .subline { font-size: 11pt; margin-bottom: 0; }
     hr { border: none; border-top: 2px solid #000; margin: 6px 0 16px 0; }
     ol li { margin-bottom: 10px; }
     .fee-table { margin: 8px 0 8px 2in; border-collapse: collapse; }
@@ -20,8 +25,6 @@
     .sig-line { border-bottom: 1px solid #000; margin-top: 40px; margin-bottom: 4px; }
     .footer { text-align: center; margin-top: 30px; font-size: 9pt; color: #555; }
     .no-print { margin-bottom: 16px; }
-    .header { display: flex; align-items: center; gap: 20px; margin-bottom: 4px; }
-    .header-text { flex: 1; }
   </style>
 </head>
 <body>
@@ -30,10 +33,16 @@
   <button onclick="window.close()">Close</button>
 </div>
 
-<h1>26 School House</h1>
+<div class="header">
+  <div class="header-logo"><img src="{% static 'images/egretlogo.png' %}" alt="26 School House"></div>
+  <div class="header-text">
+    <h1>26 School House</h1>
+    <div class="subtitle">Short Term Rental Agreement</div>
+    <div class="subline">For {{ res.guest.full_name }}, Arrive {{ res.arrive_date|date:"n/j/Y" }}</div>
+  </div>
+  <div style="width:80px"></div>
+</div>
 <hr>
-<div class="subtitle">Short Term Rental Agreement</div>
-<div class="subline">For {{ res.guest.full_name }}, Arrive {{ res.arrive_date|date:"n/j/Y" }}</div>
 
 <p>This Short Term Rental Agreement (the "Agreement") is made by and between
 {{ settings.owner_first_name }} {{ settings.owner_last_name }} (the "HOMEOWNER") and {{ res.guest.full_name }} (the "GUEST") as of the date on the
