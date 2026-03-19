@@ -26,6 +26,7 @@ class AppSettings(models.Model):
     amazon_prime = models.CharField(max_length=200, blank=True)
     tax_rate = models.DecimalField(max_digits=5, decimal_places=4, default='0.1500')
     mileage_rate = models.DecimalField(max_digits=5, decimal_places=4, default='0.5400')
+    cleaning_fee = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     service_types = models.TextField(blank=True, help_text='One service type per line')
     maintenance_types = models.TextField(blank=True, help_text='One maintenance type per line')
 

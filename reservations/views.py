@@ -42,7 +42,10 @@ def reservation_detail(request, pk):
 @login_required
 def reservation_new(request):
     guest_pk = request.GET.get('guest')
+    settings = AppSettings.get()
     initial = {}
+    if settings.cleaning_fee:
+        initial['cleaning_fee'] = settings.cleaning_fee
     if guest_pk:
         from guests.models import Guest
         try:
