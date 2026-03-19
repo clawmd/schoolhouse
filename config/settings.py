@@ -8,7 +8,7 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
 ALLOWED_HOSTS += ['.up.railway.app']
-CSRF_TRUSTED_ORIGINS = ['https://web-production-e6252.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://web-production-e6252.up.railway.app', 'https://*.up.railway.app']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
