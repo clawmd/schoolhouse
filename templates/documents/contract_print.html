@@ -4,18 +4,24 @@
   <meta charset="UTF-8">
   <title>Contract — {{ res.guest }}</title>
   <style>
-    @media print {
-      .no-print { display: none; }
-      body { margin: 0; }
-    }
-    body { font-family: Georgia, 'Times New Roman', serif; font-size: 11pt; margin: 1in; color: #000; background: #fff; }
-    h1 { font-size: 14pt; margin-bottom: 4px; }
-    h2 { font-size: 12pt; margin: 18px 0 4px 0; border-bottom: 1px solid #000; padding-bottom: 2px; }
-    table { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
-    td { padding: 3px 6px; vertical-align: top; }
-    td.label { font-weight: bold; width: 45%; }
+    @media print { .no-print { display: none; } body { margin: 0; } }
+    body { font-family: Georgia, 'Times New Roman', serif; font-size: 11pt; margin: .75in; color: #000; background: #fff; line-height: 1.5; }
+    h1 { font-size: 22pt; text-align: center; margin-bottom: 2px; }
+    .subtitle { text-align: center; font-size: 13pt; font-weight: bold; margin-bottom: 2px; }
+    .subline { text-align: center; font-size: 11pt; margin-bottom: 20px; }
+    hr { border: none; border-top: 2px solid #000; margin: 6px 0 16px 0; }
+    ol li { margin-bottom: 10px; }
+    .fee-table { margin: 8px 0 8px 2in; border-collapse: collapse; }
+    .fee-table td { padding: 3px 20px 3px 0; }
+    .fee-table .total { border-top: 1px solid #000; font-weight: bold; }
+    .sig-section { margin-top: 30px; }
+    .sig-row { display: flex; gap: 60px; margin-top: 20px; }
+    .sig-col { flex: 1; }
     .sig-line { border-bottom: 1px solid #000; margin-top: 40px; margin-bottom: 4px; }
+    .footer { text-align: center; margin-top: 30px; font-size: 9pt; color: #555; }
     .no-print { margin-bottom: 16px; }
+    .header { display: flex; align-items: center; gap: 20px; margin-bottom: 4px; }
+    .header-text { flex: 1; }
   </style>
 </head>
 <body>
@@ -24,63 +30,178 @@
   <button onclick="window.close()">Close</button>
 </div>
 
-<h1>26 Schoolhouse — Rental Agreement</h1>
+<h1>26 School House</h1>
+<hr>
+<div class="subtitle">Short Term Rental Agreement</div>
+<div class="subline">For {{ res.guest.full_name }}, Arrive {{ res.arrive_date|date:"n/j/Y" }}</div>
 
-<h2>Guest Information</h2>
-<table>
-  <tr><td class="label">Guest Name:</td><td>{{ res.guest.full_name }}</td></tr>
-  {% if res.guest.address1 %}
-  <tr><td class="label">Address:</td><td>{{ res.guest.address1 }}{% if res.guest.address2 %}, {{ res.guest.address2 }}{% endif %}<br>
-    {{ res.guest.city }}{% if res.guest.city and res.guest.state %}, {% endif %}{{ res.guest.state }} {{ res.guest.zip_code }}</td></tr>
-  {% endif %}
-  <tr><td class="label">Phone:</td><td>{{ res.guest.phone_cell|default:res.guest.phone_home }}</td></tr>
-  <tr><td class="label">Email:</td><td>{{ res.guest.email }}</td></tr>
-</table>
+<p>This Short Term Rental Agreement (the "Agreement") is made by and between
+{{ settings.owner_first_name }} {{ settings.owner_last_name }} (the "HOMEOWNER") and {{ res.guest.full_name }} (the "GUEST") as of the date on the
+signature page of this document. For good and valuable consideration, the sufficiency of which is
+acknowledged, the parties hereby agree as follows:</p>
 
-<h2>Reservation</h2>
-<table>
-  <tr><td class="label">Arrive:</td><td>{{ res.arrive_date|date:"l, F j, Y" }}{% if res.arrive_time %} at {{ res.arrive_time|time:"g:i A" }}{% endif %}</td></tr>
-  <tr><td class="label">Depart:</td><td>{{ res.leave_date|date:"l, F j, Y" }}{% if res.leave_time %} at {{ res.leave_time|time:"g:i A" }}{% endif %}</td></tr>
-  <tr><td class="label">Number of Nights:</td><td>{{ res.number_of_nights }}</td></tr>
-  <tr><td class="label">Adults:</td><td>{{ res.adults_count }}</td></tr>
-  <tr><td class="label">Children:</td><td>{{ res.children_count }}</td></tr>
-  <tr><td class="label">Pets:</td><td>{% if res.pets %}Yes{% else %}No{% endif %}</td></tr>
-</table>
+<ol>
+  <li><strong>Property.</strong> The Rental Property (the "PROPERTY") is located at:<br>
+    26 Schoolhouse Rd, Mystic, CT 06355<br>
+    The PROPERTY is furnished and includes linens, towels, and kitchen equipment.<br>
+    Photos and details available at www.26schoolhouse.com</li>
 
-<h2>Fees</h2>
-<table>
-  <tr><td class="label">Rental Fee:</td><td>${{ res.rental_fee|default:"0"|floatformat:2 }}</td></tr>
-  <tr><td class="label">Cleaning Fee:</td><td>${{ res.cleaning_fee|default:"0"|floatformat:2 }}</td></tr>
-  {% if res.additional_fee %}
-  <tr><td class="label">Additional Fee{% if res.additional_fee_note %} ({{ res.additional_fee_note }}){% endif %}:</td><td>${{ res.additional_fee|floatformat:2 }}</td></tr>
-  {% endif %}
-  {% if res.tax_fee %}
-  <tr><td class="label">Tax:</td><td>${{ res.tax_fee|floatformat:2 }}</td></tr>
-  {% endif %}
-  <tr><td class="label"><strong>Total:</strong></td><td><strong>${{ res.total_fee|floatformat:2 }}</strong></td></tr>
-  <tr><td class="label">Security Deposit:</td><td>${{ res.deposit|default:"0"|floatformat:2 }}</td></tr>
-</table>
+  <li><strong>Rental Party.</strong> The rental party shall consist of {{ res.adults_count }} adult{{ res.adults_count|pluralize }} and {{ res.children_count }} child{{ res.children_count|pluralize:"ren" }}<br><br>
+    {{ res.guest.full_name }}<br>
+    {% if res.guest.address1 %}{{ res.guest.address1 }}<br>{% endif %}
+    {% if res.guest.address2 %}{{ res.guest.address2 }}<br>{% endif %}
+    {% if res.guest.city %}{{ res.guest.city }}{% if res.guest.state %}, {{ res.guest.state }}{% endif %} {{ res.guest.zip_code }}<br>{% endif %}
+    <br>
+    {% if res.guest.email %}{{ res.guest.email }}<br>{% endif %}
+    {% if res.guest.phone_cell %}{{ res.guest.phone_cell }} (cell){% endif %}
+  </li>
 
-<h2>Payment Schedule</h2>
-<table>
-  <tr><td class="label">Payment 1 Due:</td><td>{{ res.pay_1_due|date:"F j, Y" }}</td></tr>
-  <tr><td class="label">Payment 2 Due:</td><td>{{ res.pay_2_due|date:"F j, Y" }}</td></tr>
-  <tr><td class="label">Payment Method:</td><td>{{ res.payment_type }}</td></tr>
-</table>
+  <li><strong>Maximum Occupancy.</strong> The maximum number of overnight guests is limited to seven (7)
+    persons. Only those persons listed in the Rental Party above may occupy the property
+    overnight. The GUEST may invite up to six (6) additional persons onto the property for a quiet
+    social gathering, but not for an overnight stay.</li>
 
-{% if settings.owner_address1 %}
-<p>Checks payable to {{ settings.owner_first_name }} {{ settings.owner_last_name }}<br>
-Mail to: {{ settings.owner_address1 }}, {{ settings.owner_city }}, {{ settings.owner_state }} {{ settings.owner_zip }}</p>
-{% endif %}
+  <li><strong>Term of the Rental Agreement.</strong><br>
+    Arrival {{ res.arrive_date|date:"n/j/Y" }}, Check-in {% if res.arrive_time %}{{ res.arrive_time|time:"H:i" }}{% else %}16:00{% endif %}<br>
+    Leave {{ res.leave_date|date:"n/j/Y" }}, Check-out {% if res.leave_time %}{{ res.leave_time|time:"H:i" }}{% else %}11:00{% endif %}<br><br>
+    Late check-out fee is $100/hr unless prior arrangements have been agreed upon in writing.</li>
 
-<h2>Agreement</h2>
-<p>The undersigned agrees to the terms of this rental agreement and the attached House Rules.</p>
+  <li><strong>Rental Rules.</strong> The GUEST agrees to abide by the Rental Rules ("RULES") attached as
+    Exhibit A at all times while at the property and shall cause all members of the rental party and
+    anyone else the GUEST permits on the property to abide by the RULES at all times while at
+    the property.</li>
 
-<div class="sig-line">&nbsp;</div>
-<p>Guest Signature &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date</p>
+  <li><strong>Access.</strong> The GUEST will allow the Homeowner access to the property for purposes of repair
+    and inspection. Homeowner shall exercise this right of access in a reasonable manner.</li>
 
-<div class="sig-line">&nbsp;</div>
-<p>Owner Signature &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date</p>
+  <li><strong>Security Deposit.</strong> A security deposit of {% if res.deposit %}${{ res.deposit|floatformat:2 }}{% endif %} is due with first payment.
+    The deposit shall be refunded within fourteen (14) days of the Checkout Date minus any
+    deductions that are made due to:
+    <ol type="a">
+      <li>Damage to the property or furnishings.</li>
+      <li>Dirty dishes or other mess requiring excessive cleaning.</li>
+      <li>Garbage that has not been properly stored in the screened area next to the kitchen</li>
+      <li>Lost or damaged linens</li>
+      <li>Cleaning due to pet hair or refuse</li>
+      <li>Any other cost incurred by Homeowner due to Guest's improper use of the home.</li>
+      <li>Furniture and home decorations that have been moved</li>
+    </ol>
+  </li>
+
+  <li><strong>Payment.</strong> Rental Rate and fees are as follows:<br><br>
+    Payment to be made as <strong>{{ res.payment_type|default:"Check" }}</strong>
+    <table class="fee-table">
+      <tr><td>Rental Fee</td><td>=</td><td>${{ res.rental_fee|default:""|floatformat:2 }}</td></tr>
+      <tr><td>Cleaning fee</td><td>=</td><td>${{ res.cleaning_fee|default:""|floatformat:2 }}</td></tr>
+      {% if res.tax_fee %}<tr><td>Tax</td><td>=</td><td>${{ res.tax_fee|floatformat:2 }}</td></tr>{% endif %}
+      <tr class="total"><td>Total:</td><td>=</td><td>${{ res.total_fee|floatformat:2 }}</td></tr>
+      <tr><td>Damage deposit</td><td>=</td><td>{% if res.deposit %}${{ res.deposit|floatformat:2 }}{% endif %}</td></tr>
+    </table>
+  </li>
+
+  <li><strong>Cancellation Policy.</strong> No Refunds will be made for cancellations or early departures. Most
+    renters book far in advance, especially for Summer, so it can be difficult to find replacement
+    guests. However, we will make a sincere effort to re-rent it. If the PROPERTY can be rented
+    for the same time period as the canceled reservation, a pro-rated refund will be issued by the
+    HOMEOWNER. The Damage deposit will be returned in full for cancellations.
+    We recommend purchasing travel insurance; You can compare policies and costs at
+    with an insurance broker or at websites such as www.insuremytrip.com</li>
+
+  <li><strong>HomeAway.</strong> The HOMEOWNER is not a party to the Service Fee paid by the Guest to
+    HomeAway. The HOMEOWNER does not receive any portion of this fee and does not charge
+    this fee to Guests who do not book through HomeAway.</li>
+
+  <li><strong>Indemnification and Hold Harmless.</strong> The GUEST agrees to indemnify and hold harmless
+    the HOMEOWNER, for any liabilities, injury, damage, cost or expense that is not the direct
+    result of negligence by the HOMEOWNER.</li>
+
+  <li><strong>Attorney's Fees and Costs.</strong> If the HOMEOWNER has to pursue any legal remedies due to
+    the breach of this agreement by the GUEST, then the GUEST shall be responsible for all costs,
+    including reasonable attorney fees and court costs.</li>
+
+  <li><strong>Falsified Bookings.</strong> If your booking was made under false pretense, including, but not
+    limited to, a falsified name, age or size of party, you may be subject to immediate eviction and
+    forfeiture of all amounts paid.</li>
+
+  <li><strong>Severability.</strong> If any section, clause, paragraph or term of the Rental Agreement is held or
+    determined to be void, invalid or unenforceable, for any reason, all other terms, clauses or
+    paragraphs shall remain in force and effect.</li>
+
+  <li><strong>Entire Agreement.</strong> This Agreement constitutes the entire agreement of the parties and
+    supersedes all prior or current verbal or written agreements concerning this subject matter.</li>
+
+  <li><strong>Storm Policy.</strong> No refunds will be given for storms. If a mandatory evacuation is ordered, a
+    pro-rated refunded may be given at the discretion of the HOMEOWNER.</li>
+
+  <li><strong>Amenities.</strong> The HOMEOWNER will make a sincere effort to ensure that appliances,
+    heating/cooling systems, wireless network, stereo, home theater, and home automation
+    features are in working condition. The GUEST acknowledges that these things can break and
+    or malfunction and that a refund will not be given for these events.</li>
+
+  <li><strong>Governing Law.</strong> This agreement shall be governed by the laws of the state of Connecticut.
+    Any matter arising from this agreement will be under the jurisdiction of the federal and state
+    courts located in Connecticut.</li>
+
+  <li><strong>Violation of Law.</strong> The GUEST agrees not to violate any laws during the term of this lease
+    other than minor infractions related to motor vehicles.</li>
+
+  <li><strong>Lost Property.</strong> The GUEST shall be responsible for any lost, broken or stolen property of
+    Owner that occurs during the term of this lease, that is the result of negligence by the Guest or
+    invitee of the GUEST.</li>
+
+  <li><strong>Destroyed or Unlivable Home.</strong> If the home is unfit to live in due to any cause, including fire
+    or flooding, the HOMEOWNER may terminate this rental agreement with no further liability
+    to the GUEST other than refunding unused rent. If the destruction or damage was the
+    GUEST'S fault, unused rent will not be returned.</li>
+
+  <li><strong>Governmental Restrictions on Rentals.</strong> If state or local government restricts the ability to
+    rent the PROPERTY, the HOMEOWNER may terminate this rental agreement with no further
+    liability to the GUEST other than refunding any unused rent.</li>
+
+  <li><strong>Requirement to Leave.</strong> If the GUEST refuses to move out after this rental agreement ends,
+    the GUEST will pay the HOMEOWNER $700 per day and court costs.</li>
+
+  <li><strong>A Breach</strong> of any part of this contract by the GUEST or invitees of the GUEST, may result in
+    eviction and forfeiture of amounts paid.</li>
+
+  <li><strong>Returned checks.</strong> Returned checks will be subject to a $75 fee or actual expenses and fees
+    incurred by Homeowner.</li>
+
+  <li><strong>Pets.</strong> Pets cannot be brought into the Property without prior approval by the HOMEOWNER.
+    There is a PET RULES that the GUEST needs to sign.</li>
+</ol>
+
+<div class="sig-section">
+  <p>The parties agree to the terms of this Short Term Rental Agreement, as evidenced by the signatures set forth below.</p>
+  <div class="sig-row">
+    <div class="sig-col">
+      <p>Homeowner</p>
+      <div class="sig-line">&nbsp;</div>
+      <p>Name: {{ settings.owner_first_name }} {{ settings.owner_last_name }}<br>
+      Date: ________________________<br><br>
+      {{ settings.owner_first_name }} {{ settings.owner_last_name }}<br>
+      {% if settings.owner_address1 %}{{ settings.owner_address1 }}<br>{% endif %}
+      {% if settings.owner_city %}{{ settings.owner_city }}, {{ settings.owner_state }} {{ settings.owner_zip }}<br>{% endif %}
+      {% if settings.owner_email %}{{ settings.owner_email }}<br>{% endif %}
+      {% if settings.owner_phone %}{{ settings.owner_phone }}<br>{% endif %}
+      </p>
+    </div>
+    <div class="sig-col">
+      <p>Guest</p>
+      <div class="sig-line">&nbsp;</div>
+      <p>Name: {{ res.guest.full_name }}<br>
+      Date: ________________________<br><br>
+      {{ res.guest.full_name }}<br>
+      {% if res.guest.address1 %}{{ res.guest.address1 }}<br>{% endif %}
+      {% if res.guest.city %}{{ res.guest.city }}, {{ res.guest.state }} {{ res.guest.zip_code }}<br>{% endif %}
+      {% if res.guest.email %}{{ res.guest.email }}<br>{% endif %}
+      {% if res.guest.phone_cell %}{{ res.guest.phone_cell }} (cell){% endif %}
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="footer">(Contract for {{ res.guest.full_name }}, Arrive {{ res.arrive_date|date:"n/j/Y" }})</div>
 
 <script>window.print();</script>
 </body>
