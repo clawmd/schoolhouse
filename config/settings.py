@@ -85,13 +85,17 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = '/login/'
-LOGIN_REDIRECT_URL = '/reservations/'
+LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login/'
 
-AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID', default='')
-if AWS_ACCESS_KEY_ID:
+R2_ACCESS_KEY_ID = config('R2_ACCESS_KEY_ID', default='')
+if R2_ACCESS_KEY_ID:
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
-    AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
-    AWS_S3_ENDPOINT_URL = config('AWS_S3_ENDPOINT_URL')
+    AWS_ACCESS_KEY_ID = R2_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY = config('R2_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = config('R2_BUCKET_NAME', default='schoolhouse-media')
+    AWS_S3_ENDPOINT_URL = f"https://{config('R2_ACCOUNT_ID')}.r2.cloudflarestorage.com"
     AWS_S3_FILE_OVERWRITE = False
+    AWS_DEFAULT_ACL = None
+    AWS_QUERYSTRING_AUTH = False
+    MEDIA_URL = f"https://{config('R2_ACCOUNT_ID')}.r2.cloudflarestorage.com/{config('R2_BUCKET_NAME', default='schoolhouse-media')}/"
