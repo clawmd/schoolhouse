@@ -98,4 +98,4 @@ if R2_ACCESS_KEY_ID:
     AWS_S3_FILE_OVERWRITE = False
     AWS_DEFAULT_ACL = None
     AWS_QUERYSTRING_AUTH = False
-    MEDIA_URL = f"https://{config('R2_ACCOUNT_ID')}.r2.cloudflarestorage.com/{config('R2_BUCKET_NAME', default='schoolhouse-media')}/"
+    MEDIA_URL = config('R2_PUBLIC_URL').rstrip('/') + '/'
